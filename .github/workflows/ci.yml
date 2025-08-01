@@ -12,26 +12,26 @@ jobs:
     name: Lint
     runs-on: "ubuntu-latest"
     steps:
-    - name: Setup Go environment
-      uses: actions/setup-go@v3
-      with:
-        go-version: "1.24.x"
+      - name: Setup Go environment
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.24.x"
 
-    - name: Install staticcheck
-      run: go install honnef.co/go/tools/cmd/staticcheck@v0.5.1
-    - name: Install goimports
-      run: go install golang.org/x/tools/cmd/goimports@latest
+      - name: Install staticcheck
+        run: go install honnef.co/go/tools/cmd/staticcheck@v0.5.1
+      - name: Install goimports
+        run: go install golang.org/x/tools/cmd/goimports@latest
 
-    # Checks-out the repository under $GITHUB_WORKSPACE
-    - uses: actions/checkout@v3
+      # Checks-out the repository under $GITHUB_WORKSPACE
+      - uses: actions/checkout@v3
 
-    # Run linters
-    - name: Run go vet
-      run: go vet ./...
-    - name: Run goimports
-      run: test -z $(find . -name '*.go' -type f | xargs goimports -e -d | tee /dev/stderr)
-    - name: Run staticcheck
-      run: staticcheck ./...
+      # Run linters
+      - name: Run go vet
+        run: go vet ./...
+      - name: Run goimports
+        run: test -z $(find . -name '*.go' -type f | xargs goimports -e -d | tee /dev/stderr)
+      - name: Run staticcheck
+        run: staticcheck ./...
 
   test:
     name: "Test"
@@ -43,17 +43,17 @@ jobs:
         go-version: ["1.24.x", "1.19.x"]
 
     steps:
-    - name: Setup Go environment
-      id: setup-go
-      uses: actions/setup-go@v3
-      with:
-        go-version: ${{ matrix.go-version }}
+      - name: Setup Go environment
+        id: setup-go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
 
-    # Checks-out the repository under $GITHUB_WORKSPACE
-    - uses: actions/checkout@v3
+      # Checks-out the repository under $GITHUB_WORKSPACE
+      - uses: actions/checkout@v3
 
-    # Run tests
-    - run: go test -v -cover -race ./...
+      # Run tests
+      - run: go test -v -cover -race ./...
 
   k8s:
     name: "Verify k8s build"
@@ -65,17 +65,17 @@ jobs:
         go-version: ["1.19.x"]
 
     steps:
-    - name: Setup Go environment
-      id: setup-go
-      uses: actions/setup-go@v3
-      with:
-        go-version: ${{ matrix.go-version }}
+      - name: Setup Go environment
+        id: setup-go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
 
-    # Checks-out the repository under $GITHUB_WORKSPACE
-    - uses: actions/checkout@v3
+      # Checks-out the repository under $GITHUB_WORKSPACE
+      - uses: actions/checkout@v3
 
-    # Run tests
-    - run: go build -tags k8s
+      # Run tests
+      - run: go build -tags k8s
 
   build:
     name: "Build Calculator (${{ matrix.target.os }}, ${{ matrix.go-version }})"
@@ -96,7 +96,7 @@ jobs:
             args: -app-id calc.sha${{ github.sha }}
           - os: darwin
             args: -app-id calc.sha${{ github.sha }}
-          # Only macos-13 is supported as macos-14 is running in a VM on Mac M1 which are incompatible with docker/podman
+            # Only macos-13 is supported as macos-14 is running in a VM on Mac M1 which are incompatible with docker/podman
             host: macos-13
           - os: web
 
@@ -173,7 +173,7 @@ jobs:
             args: -app-id calc.sha${{ github.sha }}
           - os: darwin
             args: -app-id calc.sha${{ github.sha }}
-          # Only macos-13 is supported as macos-14 is running in a VM on Mac M1 which are incompatible with docker/podman
+            # Only macos-13 is supported as macos-14 is running in a VM on Mac M1 which are incompatible with docker/podman
             host: macos-13
 
           ## Currently not easily supported from GitHub actions.
